@@ -94,4 +94,118 @@
 <!-- Modal Login -->
 <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center;">
     <div style="background:white; padding:40px; border-radius:20px; width:90%; max-width:400px; text-align:center;">
-        <
+        <h2>Iniciar Sesión Administrador</h2>
+        <input type="password" id="adminPassword" placeholder="Contraseña" style="width:100%; padding:14px; margin:20px 0; border-radius:12px;">
+        <button onclick="loginAdmin()" style="background:#003087; color:white; width:100%; padding:14px; border:none; border-radius:12px;">Entrar</button>
+        <button onclick="cerrarLoginModal()" style="background:#6b7280; color:white; width:100%; padding:14px; border:none; border-radius:12px; margin-top:10px;">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    let datosUsuario = {};
+    let turnos = [];
+    let isAdminLogged = false;
+    const ADMIN_PASSWORD = "admin123";
+
+    const motivosLista = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
+    let contadores = {};
+
+    function cargarMotivos() {
+        const container = document.getElementById('motivosContainer');
+        container.innerHTML = '';
+        
+        motivosLista.forEach(motivo => {
+            const btn = document.createElement('button');
+            btn.className = 'motivo-btn';
+            btn.textContent = motivo;
+            btn.onclick = () => seleccionarMotivo(btn, motivo);
+            container.appendChild(btn);
+        });
+    }
+
+    function seleccionarMotivo(btn, motivo) {
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        datosUsuario.motivo = motivo;
+        document.getElementById('btnRegistrar').disabled = false;
+    }
+
+    function generarNumeroTurno(motivo) {
+        const inicial = motivo.charAt(0).toUpperCase();
+        if (!contadores[inicial]) contadores[inicial] = 0;
+        contadores[inicial]++;
+        return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
+    }
+
+    function siguientePantalla() {
+        const dni = document.getElementById('dni').value.trim();
+        const celular = document.getElementById('celular').value.trim();
+        if (!dni || dni.length < 8 || !celular) {
+            alert("Por favor complete DNI y Celular correctamente");
+            return;
+        }
+        datosUsuario = { dni, celular };
+        document.getElementById('screen1').classList.remove('active');
+        document.getElementById('screen2').classList.add('active');
+    }
+
+    function registrarTurno() {
+        const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
+        const fecha = new Date().toLocaleString('es-PE');
+
+        const nuevo = {
+            Numero_Turno: numeroTurno,
+            Fecha: fecha,
+            DNI: datosUsuario.dni,
+            Celular: datosUsuario.celular,
+            Motivo: datosUsuario.motivo
+        };
+
+        turnos.push(nuevo);
+        localStorage.setItem('ciu_turnos', JSON.stringify(turnos));
+
+        document.getElementById('numeroTurno').textContent = numeroTurno;
+        document.getElementById('screen2').classList.remove('active');
+        document.getElementById('screenSuccess').style.display = 'block';
+    }
+
+    function mostrarLoginAdmin() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    function cerrarLoginModal() {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminPassword').value = '';
+    }
+
+    function loginAdmin() {
+        if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
+            isAdminLogged = true;
+            cerrarLoginModal();
+            alert("✅ Sesión de Administrador iniciada.\n\nLos turnos se guardan en tu navegador.");
+        } else {
+            alert("Contraseña incorrecta");
+        }
+    }
+
+    function reiniciarFormulario() {
+        document.getElementById('screenSuccess').style.display = 'none';
+        document.getElementById('screen1').classList.add('active');
+        document.getElementById('dni').value = '';
+        document.getElementById('celular').value = '';
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btnRegistrar').disabled = true;
+    }
+
+    function volverPantalla1() {
+        document.getElementById('screen2').classList.remove('active');
+        document.getElementById('screen1').classList.add('active');
+    }
+
+    // Inicializar
+    window.onload = function() {
+        cargarMotivos();
+    };
+</script>
+</body>
+</html>
