@@ -5,72 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIU - Turnos | UNSTA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #003087; --primary-dark: #002266; }
+        :root { --primary: #003087; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8f9fc 0%, #e6ebf5 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 560px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 48, 135, 0.12);
-            overflow: hidden;
-        }
-        header {
-            background: linear-gradient(135deg, var(--primary), #0052cc);
-            color: white;
-            padding: 30px 20px 35px;
-            text-align: center;
-            position: relative;
-        }
-        .logo { width: 115px; height: 115px; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
-        .admin-btn {
-            position: absolute; top: 20px; left: 20px;
-            background: rgba(255,255,255,0.25); color: white;
-            border: none; width: 45px; height: 45px;
-            border-radius: 50%; font-size: 1.5rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .screen { padding: 45px 35px; display: none; }
-        .screen.active { display: block; }
-        h2 { font-family: 'Poppins', sans-serif; text-align: center; margin-bottom: 30px; color: #1f2937; font-weight: 600; }
-        
-        input {
-            width: 100%; padding: 16px; margin: 10px 0;
-            border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1.1rem;
-        }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(0,48,135,0.1); }
-
-        button {
-            width: 100%; padding: 16px; margin: 8px 0;
-            background: var(--primary); color: white; border: none;
-            border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
-        }
-        button:hover { background: var(--primary-dark); transform: translateY(-2px); }
-
-        .motivos { display: grid; gap: 14px; margin: 25px 0; }
-        .motivo-btn {
-            padding: 24px; text-align: center; border: 2px solid #e5e7eb;
-            border-radius: 16px; font-size: 1.25rem; font-weight: 600;
-            background: white; cursor: pointer; transition: all 0.3s;
-        }
-        .motivo-btn:hover { border-color: var(--primary); transform: translateY(-4px); }
-        .motivo-btn.active { background: #f0f4ff; border-color: var(--primary); }
-
-        .success { text-align: center; padding: 50px 30px; background: #ecfdf5; display: none; }
-        .admin-section { padding: 25px; background: #f8f9fa; border-top: 1px solid #eee; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 560px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,48,135,0.15); overflow: hidden; }
+        header { background: linear-gradient(135deg, var(--primary), #0052cc); color: white; padding: 35px 20px 40px; text-align: center; position: relative; }
+        .logo { width: 125px; height: 125px; margin-bottom: 15px; }
+        .admin-btn { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.25); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.6rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -85,202 +29,114 @@
 
     <div id="screen1" class="screen active">
         <h2>Ingrese sus datos</h2>
-        <input type="text" id="dni" placeholder="DNI *" maxlength="8">
-        <input type="tel" id="celular" placeholder="Número de Celular *" maxlength="15">
-        <button onclick="siguientePantalla()">Continuar →</button>
+        <input type="text" id="dni" placeholder="DNI *" maxlength="8" style="width:100%; padding:16px; margin:10px 0; border:2px solid #e2e8f0; border-radius:14px;">
+        <input type="tel" id="celular" placeholder="Celular *" maxlength="15" style="width:100%; padding:16px; margin:10px 0; border:2px solid #e2e8f0; border-radius:14px;">
+        <button onclick="siguientePantalla()" style="background:#003087; color:white; padding:16px; border:none; border-radius:14px; width:100%; margin-top:10px;">Continuar</button>
     </div>
 
     <div id="screen2" class="screen">
-        <h2>Seleccione el motivo de su consulta</h2>
-        <div class="motivos" id="motivosContainer"></div>
-        <button onclick="registrarTurno()" id="btnRegistrar" disabled>Obtener Turno</button>
-        <button onclick="volverPantalla1()" style="background:#6b7280;">← Volver</button>
+        <h2>¿Cuál es el motivo de su consulta?</h2>
+        <div class="motivos" id="motivosContainer" style="display:grid; gap:14px; margin:25px 0;"></div>
+        <button onclick="registrarTurno()" id="btnRegistrar" disabled style="background:#003087; color:white; padding:16px; border:none; border-radius:14px; width:100%;">Obtener Turno</button>
     </div>
 
-    <div id="screenSuccess" class="screen success">
-        <h2>✅ Turno Registrado Correctamente</h2>
-        <p style="font-size:2rem; font-weight:700; margin:20px 0;" id="numeroTurno"></p>
-        <p id="datosUsuario"></p>
-        <button onclick="reiniciarFormulario()" style="margin-top:25px;">Nuevo Registro</button>
-    </div>
-
-    <div class="admin-section">
-        <div id="adminPanel" style="display:none;">
-            <h3>Panel de Administrador</h3>
-            <div id="listaTurnos" style="max-height:400px; overflow-y:auto;"></div>
-            <button onclick="exportarExcel()" style="background:#10b981; margin-top:15px;">📊 Exportar a Excel</button>
-            <button onclick="logoutAdmin()" style="background:#ef4444; margin-top:8px;">Cerrar Sesión</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Admin -->
-<div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
-    <div style="background:white; padding:35px; border-radius:16px; width:90%; max-width:400px;">
-        <h2>Acceso Administrador</h2>
-        <input type="password" id="adminPassword" placeholder="Ingrese contraseña" style="width:100%; padding:14px; margin:15px 0; border-radius:10px;">
-        <button onclick="loginAdmin()" style="background:#003087; width:100%; padding:14px;">Entrar</button>
-        <button onclick="cerrarLoginModal()" style="background:#6b7280; width:100%; margin-top:10px; padding:14px;">Cancelar</button>
+    <div id="screenSuccess" class="screen" style="text-align:center; display:none; padding:60px 30px;">
+        <h2 style="color:#10b981;">✅ Turno Registrado</h2>
+        <p style="font-size:2.5rem; font-weight:700;" id="numeroTurno"></p>
+        <button onclick="reiniciarFormulario()" style="background:#003087; color:white; padding:16px; margin-top:25px; width:100%;">Nuevo Registro</button>
     </div>
 </div>
 
 <script>
-// ==================== 🔥 CONFIGURACIÓN FIREBASE ====================
-const firebaseConfig = {
-    apiKey: "PON_AQUÍ_TU_API_KEY",
-    authDomain: "PON_AQUÍ_TU_PROYECTO.firebaseapp.com",
-    projectId: "PON_AQUÍ_TU_PROYECTO",
-    storageBucket: "PON_AQUÍ_TU_PROYECTO.appspot.com",
-    messagingSenderId: "PON_AQUÍ_TU_SENDER_ID",
-    appId: "PON_AQUÍ_TU_APP_ID"
-};
+    let datosUsuario = {};
+    const motivosLista = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
+    let contadores = {};
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    // ←←← PEGA AQUÍ TU URL DE APPS SCRIPT ←←←
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjhPPMlyicPPTVs8myznwH17yBRwRMvU70bg8k34D1uKmDU3M1EQZIEK4R-WXjNaf8Lw/exec";
 
-let datosUsuario = {};
-let isAdminLogged = false;
-const ADMIN_PASSWORD = "admin123";   // Cambia esta contraseña
-
-// ==================== FUNCIONES ====================
-const motivos = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
-
-function cargarMotivos() {
-    const container = document.getElementById('motivosContainer');
-    container.innerHTML = '';
-    motivos.forEach(motivo => {
-        const btn = document.createElement('button');
-        btn.className = 'motivo-btn';
-        btn.textContent = motivo;
-        btn.onclick = () => seleccionarMotivo(btn);
-        container.appendChild(btn);
-    });
-}
-
-function siguientePantalla() {
-    const dni = document.getElementById('dni').value.trim();
-    const celular = document.getElementById('celular').value.trim();
-    
-    if (!dni || dni.length < 8 || !celular) {
-        alert("Por favor complete DNI y Celular correctamente");
-        return;
-    }
-    datosUsuario = { dni, celular };
-    document.getElementById('screen1').classList.remove('active');
-    document.getElementById('screen2').classList.add('active');
-}
-
-function seleccionarMotivo(btn) {
-    document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('btnRegistrar').disabled = false;
-    datosUsuario.motivo = btn.textContent;
-}
-
-async function registrarTurno() {
-    const numeroTurno = "T-" + String(Math.floor(100 + Math.random() * 900));
-    const fecha = new Date().toLocaleString('es-PE');
-
-    const turno = {
-        Numero_Turno: numeroTurno,
-        Fecha: fecha,
-        DNI: datosUsuario.dni,
-        Celular: datosUsuario.celular,
-        Motivo: datosUsuario.motivo,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    try {
-        await db.collection("turnos").add(turno);
-        
-        document.getElementById('numeroTurno').textContent = numeroTurno;
-        document.getElementById('datosUsuario').innerHTML = `
-            DNI: ${datosUsuario.dni}<br>
-            Celular: ${datosUsuario.celular}<br>
-            Motivo: <strong>${datosUsuario.motivo}</strong>
-        `;
-        
-        document.getElementById('screen2').classList.remove('active');
-        document.getElementById('screenSuccess').style.display = 'block';
-    } catch (error) {
-        alert("Error al registrar el turno: " + error.message);
-    }
-}
-
-function cargarTurnosEnTiempoReal() {
-    db.collection("turnos").orderBy("timestamp", "desc")
-        .onSnapshot(snapshot => {
-            const lista = document.getElementById('listaTurnos');
-            lista.innerHTML = '';
-            snapshot.forEach(doc => {
-                const t = doc.data();
-                const div = document.createElement('div');
-                div.style.cssText = 'background:white; padding:14px; margin:8px 0; border-radius:12px; border-left:5px solid #003087;';
-                div.innerHTML = `
-                    <strong>${t.Numero_Turno}</strong> - ${t.Fecha}<br>
-                    DNI: ${t.DNI} | Cel: ${t.Celular}<br>
-                    <strong>${t.Motivo}</strong>
-                `;
-                lista.appendChild(div);
-            });
+    function cargarMotivos() {
+        const container = document.getElementById('motivosContainer');
+        container.innerHTML = '';
+        motivosLista.forEach(motivo => {
+            const btn = document.createElement('button');
+            btn.className = 'motivo-btn';
+            btn.textContent = motivo;
+            btn.style.cssText = 'padding:24px; border:2px solid #e2e8f0; border-radius:16px; text-align:center; font-weight:600; background:white; cursor:pointer;';
+            btn.onclick = () => seleccionarMotivo(btn, motivo);
+            container.appendChild(btn);
         });
-}
-
-function exportarExcel() {
-    // Esta función necesitaría descargar los datos primero
-    alert("Función de exportación en desarrollo.\nPor ahora puede ver los turnos en el panel.");
-}
-
-// Funciones de Admin y navegación
-function mostrarLoginAdmin() {
-    document.getElementById('loginModal').style.display = 'flex';
-}
-
-function cerrarLoginModal() {
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('adminPassword').value = '';
-}
-
-function loginAdmin() {
-    if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
-        isAdminLogged = true;
-        cerrarLoginModal();
-        document.getElementById('adminPanel').style.display = 'block';
-    } else {
-        alert("Contraseña incorrecta");
     }
-}
 
-function logoutAdmin() {
-    if (confirm("¿Cerrar sesión?")) {
-        isAdminLogged = false;
-        document.getElementById('adminPanel').style.display = 'none';
+    function seleccionarMotivo(btn, motivo) {
+        document.querySelectorAll('.motivo-btn').forEach(b => b.style.borderColor = '#e2e8f0');
+        btn.style.borderColor = '#003087';
+        datosUsuario.motivo = motivo;
+        document.getElementById('btnRegistrar').disabled = false;
     }
-}
 
-function volverPantalla1() {
-    document.getElementById('screen2').classList.remove('active');
-    document.getElementById('screen1').classList.add('active');
-}
+    function generarNumeroTurno(motivo) {
+        const inicial = motivo.charAt(0).toUpperCase();
+        if (!contadores[inicial]) contadores[inicial] = 0;
+        contadores[inicial]++;
+        return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
+    }
 
-function reiniciarFormulario() {
-    document.getElementById('screenSuccess').style.display = 'none';
-    document.getElementById('screen1').classList.add('active');
-    document.getElementById('dni').value = '';
-    document.getElementById('celular').value = '';
-    datosUsuario = {};
-    document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btnRegistrar').disabled = true;
-}
+    function siguientePantalla() {
+        const dni = document.getElementById('dni').value.trim();
+        const celular = document.getElementById('celular').value.trim();
+        if (!dni || dni.length < 8 || !celular) {
+            alert("Por favor complete DNI y Celular");
+            return;
+        }
+        datosUsuario = { dni, celular };
+        document.getElementById('screen1').classList.remove('active');
+        document.getElementById('screen2').classList.add('active');
+    }
 
-// Inicializar
-cargarMotivos();
-cargarTurnosEnTiempoReal();
+    async function registrarTurno() {
+        const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
+        const fecha = new Date().toLocaleString('es-PE');
 
-document.getElementById('dni').addEventListener('input', e => e.target.value = e.target.value.replace(/\D/g, ''));
-document.getElementById('celular').addEventListener('input', e => {
-    e.target.value = e.target.value.replace(/[^0-9+]/g, '');
-});
+        const data = {
+            Numero_Turno: numeroTurno,
+            Fecha: fecha,
+            DNI: datosUsuario.dni,
+            Celular: datosUsuario.celular,
+            Motivo: datosUsuario.motivo
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            document.getElementById('numeroTurno').textContent = numeroTurno;
+            document.getElementById('screen2').classList.remove('active');
+            document.getElementById('screenSuccess').style.display = 'block';
+        } catch (error) {
+            alert("Error al guardar en Google Sheets. Verifica la URL del script.");
+        }
+    }
+
+    function mostrarLoginAdmin() {
+        alert("Panel de Administrador\n\nVe directamente a tu Google Sheet para ver los turnos en tiempo real.");
+        window.open("https://docs.google.com/spreadsheets", "_blank");
+    }
+
+    function reiniciarFormulario() {
+        document.getElementById('screenSuccess').style.display = 'none';
+        document.getElementById('screen1').classList.add('active');
+        document.getElementById('dni').value = '';
+        document.getElementById('celular').value = '';
+        document.querySelectorAll('.motivo-btn').forEach(b => b.style.borderColor = '#e2e8f0');
+        document.getElementById('btnRegistrar').disabled = true;
+    }
+
+    // Inicializar
+    window.onload = cargarMotivos;
 </script>
 </body>
 </html>
