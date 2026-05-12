@@ -10,11 +10,51 @@
     <style>
         :root { --primary: #003087; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 560px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,48,135,0.15); overflow: hidden; }
-        header { background: linear-gradient(135deg, var(--primary), #0052cc); color: white; padding: 35px 20px 40px; text-align: center; position: relative; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 48, 135, 0.15);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), #0052cc);
+            color: white;
+            padding: 35px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
         .logo { width: 125px; height: 125px; margin-bottom: 15px; }
-        .admin-btn { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.25); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.6rem; cursor: pointer; }
+
+        .admin-btn {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255,255,255,0.25); color: white;
+            border: none; width: 50px; height: 50px;
+            border-radius: 50%; font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        .screen { padding: 40px 30px; display: none; }
+        .screen.active { display: block; }
+
+        h2 { text-align: center; margin-bottom: 30px; color: #1e2937; font-weight: 600; }
+
+        input { width: 100%; padding: 16px; margin: 10px 0; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 1.1rem; }
+
+        .motivos { display: grid; gap: 14px; margin: 25px 0; }
+        .motivo-btn {
+            padding: 24px; border: 2px solid #e2e8f0; border-radius: 16px;
+            text-align: center; font-weight: 600; background: white;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .motivo-btn:hover, .motivo-btn.active { border-color: var(--primary); background: #f0f4ff; }
     </style>
 </head>
 <body>
@@ -27,19 +67,23 @@
         <button class="admin-btn" onclick="mostrarLoginAdmin()" title="Administrador">⚙️</button>
     </header>
 
+    <!-- Pantalla 1 -->
     <div id="screen1" class="screen active">
         <h2>Ingrese sus datos</h2>
-        <input type="text" id="dni" placeholder="DNI *" maxlength="8" style="width:100%; padding:16px; margin:10px 0; border:2px solid #e2e8f0; border-radius:14px;">
-        <input type="tel" id="celular" placeholder="Celular *" maxlength="15" style="width:100%; padding:16px; margin:10px 0; border:2px solid #e2e8f0; border-radius:14px;">
-        <button onclick="siguientePantalla()" style="background:#003087; color:white; padding:16px; border:none; border-radius:14px; width:100%; margin-top:10px;">Continuar</button>
+        <input type="text" id="dni" placeholder="DNI *" maxlength="8">
+        <input type="tel" id="celular" placeholder="Celular *" maxlength="15">
+        <button onclick="siguientePantalla()" style="background:#003087; color:white; padding:16px; border:none; border-radius:14px; font-size:1.1rem; width:100%; margin-top:10px;">Continuar</button>
     </div>
 
+    <!-- Pantalla 2 -->
     <div id="screen2" class="screen">
         <h2>¿Cuál es el motivo de su consulta?</h2>
-        <div class="motivos" id="motivosContainer" style="display:grid; gap:14px; margin:25px 0;"></div>
+        <div class="motivos" id="motivosContainer"></div>
         <button onclick="registrarTurno()" id="btnRegistrar" disabled style="background:#003087; color:white; padding:16px; border:none; border-radius:14px; width:100%;">Obtener Turno</button>
+        <button onclick="volverPantalla1()" style="background:#6b7280; margin-top:10px; width:100%;">← Volver</button>
     </div>
 
+    <!-- Pantalla Éxito -->
     <div id="screenSuccess" class="screen" style="text-align:center; display:none; padding:60px 30px;">
         <h2 style="color:#10b981;">✅ Turno Registrado</h2>
         <p style="font-size:2.5rem; font-weight:700;" id="numeroTurno"></p>
@@ -47,96 +91,7 @@
     </div>
 </div>
 
-<script>
-    let datosUsuario = {};
-    const motivosLista = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
-    let contadores = {};
-
-    // ←←← PEGA AQUÍ TU URL DE APPS SCRIPT ←←←
-    const SCRIPT_URL = https://script.google.com/macros/s/AKfycbyjhPPMlyicPPTVs8myznwH17yBRwRMvU70bg8k34D1uKmDU3M1EQZIEK4R-WXjNaf8Lw/exec;
-
-    function cargarMotivos() {
-        const container = document.getElementById('motivosContainer');
-        container.innerHTML = '';
-        motivosLista.forEach(motivo => {
-            const btn = document.createElement('button');
-            btn.className = 'motivo-btn';
-            btn.textContent = motivo;
-            btn.style.cssText = 'padding:24px; border:2px solid #e2e8f0; border-radius:16px; text-align:center; font-weight:600; background:white; cursor:pointer;';
-            btn.onclick = () => seleccionarMotivo(btn, motivo);
-            container.appendChild(btn);
-        });
-    }
-
-    function seleccionarMotivo(btn, motivo) {
-        document.querySelectorAll('.motivo-btn').forEach(b => b.style.borderColor = '#e2e8f0');
-        btn.style.borderColor = '#003087';
-        datosUsuario.motivo = motivo;
-        document.getElementById('btnRegistrar').disabled = false;
-    }
-
-    function generarNumeroTurno(motivo) {
-        const inicial = motivo.charAt(0).toUpperCase();
-        if (!contadores[inicial]) contadores[inicial] = 0;
-        contadores[inicial]++;
-        return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
-    }
-
-    function siguientePantalla() {
-        const dni = document.getElementById('dni').value.trim();
-        const celular = document.getElementById('celular').value.trim();
-        if (!dni || dni.length < 8 || !celular) {
-            alert("Por favor complete DNI y Celular");
-            return;
-        }
-        datosUsuario = { dni, celular };
-        document.getElementById('screen1').classList.remove('active');
-        document.getElementById('screen2').classList.add('active');
-    }
-
-    async function registrarTurno() {
-        const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
-        const fecha = new Date().toLocaleString('es-PE');
-
-        const data = {
-            Numero_Turno: numeroTurno,
-            Fecha: fecha,
-            DNI: datosUsuario.dni,
-            Celular: datosUsuario.celular,
-            Motivo: datosUsuario.motivo
-        };
-
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: { "Content-Type": "application/json" }
-            });
-
-            document.getElementById('numeroTurno').textContent = numeroTurno;
-            document.getElementById('screen2').classList.remove('active');
-            document.getElementById('screenSuccess').style.display = 'block';
-        } catch (error) {
-            alert("Error al guardar en Google Sheets. Verifica la URL del script.");
-        }
-    }
-
-    function mostrarLoginAdmin() {
-        alert("Panel de Administrador\n\nVe directamente a tu Google Sheet para ver los turnos en tiempo real.");
-        window.open("https://docs.google.com/spreadsheets", "_blank");
-    }
-
-    function reiniciarFormulario() {
-        document.getElementById('screenSuccess').style.display = 'none';
-        document.getElementById('screen1').classList.add('active');
-        document.getElementById('dni').value = '';
-        document.getElementById('celular').value = '';
-        document.querySelectorAll('.motivo-btn').forEach(b => b.style.borderColor = '#e2e8f0');
-        document.getElementById('btnRegistrar').disabled = true;
-    }
-
-    // Inicializar
-    window.onload = cargarMotivos;
-</script>
-</body>
-</html>
+<!-- Modal Login -->
+<div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:40px; border-radius:20px; width:90%; max-width:400px; text-align:center;">
+        <
