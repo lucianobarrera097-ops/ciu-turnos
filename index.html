@@ -12,11 +12,7 @@
             --success: #10b981;
         }
        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
        
         body {
             font-family: 'Inter', sans-serif;
@@ -33,25 +29,25 @@
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 48, 135, 0.15);
             overflow: hidden;
-            position: relative;
         }
        
         header {
             background: linear-gradient(135deg, var(--primary), #0052cc);
             color: white;
-            padding: 35px 20px 40px;
+            padding: 30px 20px 35px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
        
         .logo {
-            width: 140px;
+            width: 145px;
             height: auto;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: block;
             margin-left: auto;
             margin-right: auto;
+            border-radius: 8px;
         }
        
         .admin-btn {
@@ -66,57 +62,31 @@
             border-radius: 50%;
             font-size: 1.6rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
        
-        .admin-btn:hover {
-            background: rgba(255,255,255,0.4);
-            transform: rotate(90deg) scale(1.1);
-        }
+        .screen { padding: 40px 30px; opacity: 0; transform: translateY(30px); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: none; }
+        .screen.active { display: block !important; opacity: 1; transform: translateY(0); }
        
-        .screen {
-            padding: 40px 30px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            display: none;
-        }
-       
-        .screen.active {
-            display: block !important;
-            opacity: 1;
-            transform: translateY(0);
-        }
-       
-        /* Resto de tus estilos (mantengo todo igual) */
         h2 { text-align: center; margin-bottom: 30px; color: #1e2937; font-weight: 600; font-size: 1.5rem; }
-        input { width: 100%; padding: 16px; margin: 10px 0; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 1.1rem; transition: all 0.3s ease; }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 48, 135, 0.1); transform: translateY(-2px); }
-        button { border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 48, 135, 0.2); }
+        input { width: 100%; padding: 16px; margin: 10px 0; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 1.1rem; }
         .btn-primary { background: var(--primary); color: white; padding: 16px; border-radius: 14px; font-size: 1.1rem; width: 100%; margin-top: 10px; font-weight: 600; }
         .btn-secondary { background: #6b7280; color: white; padding: 16px; border-radius: 14px; width: 100%; margin-top: 10px; }
-        /* ... (el resto de tus estilos se mantienen iguales) */
     </style>
 </head>
 <body>
 <div class="container">
     <header>
         <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_unsta.png"
+            src="logo-unsta.png"
             alt="Logo UNSTA"
             class="logo"
-            onerror="this.src='https://www.unsta.edu.ar/wp-content/uploads/2023/03/logo-unsta.png';"
         >
-        <h1 style="font-size: 2.2rem; margin-bottom: 8px;">CIU</h1>
+        <h1 style="font-size: 2.3rem; margin-bottom: 8px;">CIU</h1>
         <p style="opacity: 0.95;">Universidad del Norte Santo Tomás de Aquino</p>
+        
         <button class="admin-btn" onclick="mostrarLoginAdmin()" title="Administrador">⚙️</button>
     </header>
 
-    <!-- El resto de tu HTML se mantiene igual -->
     <!-- PANTALLA 1 -->
     <div id="screen1" class="screen active">
         <h2>Ingrese sus datos</h2>
@@ -125,16 +95,128 @@
         <button type="button" onclick="siguientePantalla()" class="btn-primary">Continuar →</button>
     </div>
 
-    <!-- PANTALLA 2, ÉXITO, etc. (igual que tenías) -->
-    <!-- ... copia el resto desde tu código ... -->
+    <!-- PANTALLA 2 -->
+    <div id="screen2" class="screen">
+        <h2>¿Cuál es el motivo de su consulta?</h2>
+        <div class="motivos" id="motivosContainer"></div>
+        <button type="button" onclick="registrarTurno()" id="btnRegistrar" disabled class="btn-primary">Obtener Turno</button>
+        <button type="button" onclick="volverPantalla1()" class="btn-secondary">← Volver</button>
+    </div>
 
+    <!-- ÉXITO -->
+    <div id="screenSuccess" class="screen">
+        <div class="success-icon">✅</div>
+        <h2 style="color: var(--success);">Turno Registrado</h2>
+        <p style="color: #64748b;">Tu número de turno es:</p>
+        <p id="numeroTurno" style="font-size: 3.2rem; font-weight: 700; color: var(--primary);"></p>
+        <button type="button" onclick="reiniciarFormulario()" class="btn-primary" style="margin-top: 35px;">Nuevo Registro</button>
+    </div>
 </div>
 
-<!-- Toast y Script (mantén todo tu JavaScript igual) -->
+<div id="toast"></div>
 
 <script>
-    // Tu script completo aquí (el que ya tenías)
-    // ... (no lo copio entero para no alargar, pero pégalo tal cual)
+    // === Tu JavaScript completo (con animaciones) ===
+    let datosUsuario = {};
+    const motivosLista = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
+    let contadores = {};
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuZW4epiGmW82rrVmAkDHLdqJ-1NzQq11DVdsk-JypimBliP5he6rrSZf5qW4fYIru0g/exec";
+
+    function showToast(message, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, duration);
+    }
+
+    function cargarMotivos() {
+        const container = document.getElementById('motivosContainer');
+        container.innerHTML = '';
+        motivosLista.forEach((motivo, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'motivo-btn';
+            btn.textContent = motivo;
+            btn.onclick = () => seleccionarMotivo(btn, motivo);
+            container.appendChild(btn);
+        });
+    }
+
+    function seleccionarMotivo(btn, motivo) {
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        datosUsuario.motivo = motivo;
+        document.getElementById('btnRegistrar').disabled = false;
+    }
+
+    function generarNumeroTurno(motivo) {
+        const inicial = motivo.charAt(0).toUpperCase();
+        if (!contadores[inicial]) contadores[inicial] = 0;
+        contadores[inicial]++;
+        return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
+    }
+
+    function siguientePantalla() {
+        const dni = document.getElementById('dni').value.trim();
+        const celular = document.getElementById('celular').value.trim();
+        if (!dni || dni.length < 7) return showToast("❌ Ingresa un DNI válido");
+        if (!celular || celular.length < 8) return showToast("❌ Ingresa un celular válido");
+
+        datosUsuario = { dni, celular };
+        document.getElementById('screen1').classList.remove('active');
+        setTimeout(() => document.getElementById('screen2').classList.add('active'), 100);
+    }
+
+    async function registrarTurno() {
+        const btn = document.getElementById('btnRegistrar');
+        btn.disabled = true;
+        btn.innerText = "Guardando...";
+
+        const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
+        const data = {
+            Numero_Turno: numeroTurno,
+            Fecha: new Date().toLocaleString('es-AR'),
+            DNI: datosUsuario.dni,
+            Celular: datosUsuario.celular,
+            Motivo: datosUsuario.motivo
+        };
+
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(data)
+            });
+            const resultado = await response.json();
+            if (resultado.success) {
+                document.getElementById('numeroTurno').textContent = numeroTurno;
+                document.getElementById('screen2').classList.remove('active');
+                document.getElementById('screenSuccess').classList.add('active');
+            }
+        } catch (e) {
+            showToast("❌ Error al registrar");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Obtener Turno";
+        }
+    }
+
+    function mostrarLoginAdmin() { window.open("https://docs.google.com/spreadsheets/d/1CGsivhXMu9JAwl4aR0MlYMnnlH20xEaBQK_ZyQHrt0A/edit", "_blank"); }
+
+    function reiniciarFormulario() {
+        document.getElementById('screenSuccess').classList.remove('active');
+        document.getElementById('screen1').classList.add('active');
+        document.getElementById('dni').value = '';
+        document.getElementById('celular').value = '';
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btnRegistrar').disabled = true;
+    }
+
+    function volverPantalla1() {
+        document.getElementById('screen2').classList.remove('active');
+        setTimeout(() => document.getElementById('screen1').classList.add('active'), 200);
+    }
+
+    window.onload = cargarMotivos;
 </script>
 </body>
 </html>
