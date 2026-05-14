@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIU - Turnos | UNSTA</title>
-    <!-- XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #003087;
             --success: #10b981;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+       
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+       
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
@@ -27,7 +21,7 @@
             padding: 20px;
             overflow-x: hidden;
         }
-        
+       
         .container {
             max-width: 560px;
             margin: 0 auto;
@@ -35,9 +29,8 @@
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 48, 135, 0.15);
             overflow: hidden;
-            position: relative;
         }
-        
+       
         header {
             background: linear-gradient(135deg, var(--primary), #0052cc);
             color: white;
@@ -46,7 +39,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+       
         header::after {
             content: '';
             position: absolute;
@@ -57,12 +50,12 @@
             background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
             animation: headerShine 8s linear infinite;
         }
-        
+       
         @keyframes headerShine {
             0% { transform: translateX(-30%) translateY(-30%); }
             100% { transform: translateX(30%) translateY(30%); }
         }
-        
+       
         .logo {
             width: 125px;
             max-width: 100%;
@@ -70,11 +63,11 @@
             margin-bottom: 15px;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        
+       
         .logo:hover {
             transform: scale(1.08) rotate(8deg);
         }
-        
+       
         .admin-btn {
             position: absolute;
             top: 20px;
@@ -92,12 +85,12 @@
             align-items: center;
             justify-content: center;
         }
-        
+       
         .admin-btn:hover {
             background: rgba(255,255,255,0.4);
             transform: rotate(90deg) scale(1.1);
         }
-        
+       
         .screen {
             padding: 40px 30px;
             opacity: 0;
@@ -105,60 +98,22 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: none;
         }
-        
+       
         .screen.active {
             display: block !important;
             opacity: 1;
             transform: translateY(0);
         }
-        
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #1e2937;
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-        
-        input {
-            width: 100%;
-            padding: 16px;
-            margin: 10px 0;
-            border: 2px solid #e2e8f0;
-            border-radius: 14px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 48, 135, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        button {
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 48, 135, 0.2);
-        }
-        
-        button:active {
-            transform: scale(0.95);
-        }
-        
-        /* Motivos */
-        .motivos {
-            display: grid;
-            gap: 14px;
-            margin: 25px 0;
-        }
-        
+       
+        h2 { text-align: center; margin-bottom: 30px; color: #1e2937; font-weight: 600; font-size: 1.5rem; }
+        input { width: 100%; padding: 16px; margin: 10px 0; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 1.1rem; transition: all 0.3s ease; }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 48, 135, 0.1); transform: translateY(-2px); }
+       
+        button { border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 48, 135, 0.2); }
+        button:active { transform: scale(0.95); }
+       
+        .motivos { display: grid; gap: 14px; margin: 25px 0; }
         .motivo-btn {
             padding: 24px;
             border: 2px solid #e2e8f0;
@@ -171,32 +126,12 @@
             position: relative;
             overflow: hidden;
         }
-        
-        .motivo-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            transition: 0.6s;
-        }
-        
-        .motivo-btn:hover::before,
-        .motivo-btn.active::before {
-            left: 200%;
-        }
-        
-        .motivo-btn:hover,
-        .motivo-btn.active {
+        .motivo-btn:hover, .motivo-btn.active {
             border-color: var(--primary);
             background: #f0f4ff;
             transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 15px 30px rgba(0, 48, 135, 0.15);
         }
-        
-        /* Botones principales */
+       
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -207,7 +142,7 @@
             margin-top: 10px;
             font-weight: 600;
         }
-        
+       
         .btn-secondary {
             background: #6b7280;
             color: white;
@@ -216,61 +151,7 @@
             width: 100%;
             margin-top: 10px;
         }
-        
-        /* Loading */
-        .loading {
-            position: relative;
-            pointer-events: none;
-        }
-        
-        .loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            right: 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Success Screen */
-        #screenSuccess {
-            text-align: center;
-            padding: 60px 30px;
-        }
-        
-        .success-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        @keyframes successPop {
-            0% { transform: scale(0.2) rotate(-30deg); }
-            60% { transform: scale(1.2) rotate(10deg); }
-            100% { transform: scale(1) rotate(0); }
-        }
-        
-        #numeroTurno {
-            font-size: 3.2rem;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 4px;
-            margin: 20px 0;
-            animation: numberReveal 1.2s ease;
-        }
-        
-        @keyframes numberReveal {
-            0% { opacity: 0; transform: scale(0.6) translateY(30px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        
+       
         /* Toast */
         #toast {
             position: fixed;
@@ -284,302 +165,155 @@
             font-size: 0.95rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: none;
-            align-items: center;
-            gap: 10px;
             z-index: 1000;
-            animation: toastIn 0.4s ease;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_unsta.png"
-            alt="Logo UNSTA"
-            class="logo"
-        >
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Logo_unsta.png" alt="Logo UNSTA" class="logo">
         <h1 style="font-size: 2.2rem; margin-bottom: 8px;">CIU</h1>
-        <p style="opacity: 0.95;">
-            Universidad del Norte Santo Tomás de Aquino
-        </p>
-        <button
-            class="admin-btn"
-            onclick="mostrarLoginAdmin()"
-            title="Administrador"
-        >
-            ⚙️
-        </button>
+        <p style="opacity: 0.95;">Universidad del Norte Santo Tomás de Aquino</p>
+        <button class="admin-btn" onclick="mostrarLoginAdmin()" title="Administrador">⚙️</button>
     </header>
 
     <!-- PANTALLA 1 -->
     <div id="screen1" class="screen active">
         <h2>Ingrese sus datos</h2>
-        <input
-            type="text"
-            id="dni"
-            placeholder="DNI *"
-            maxlength="8"
-        >
-        <input
-            type="tel"
-            id="celular"
-            placeholder="Celular *"
-            maxlength="15"
-        >
-        <button
-            type="button"
-            onclick="siguientePantalla()"
-            class="btn-primary"
-        >
-            Continuar →
-        </button>
+        <input type="text" id="dni" placeholder="DNI *" maxlength="8">
+        <input type="tel" id="celular" placeholder="Celular *" maxlength="15">
+        <button type="button" onclick="siguientePantalla()" class="btn-primary">Continuar →</button>
     </div>
 
     <!-- PANTALLA 2 -->
     <div id="screen2" class="screen">
         <h2>¿Cuál es el motivo de su consulta?</h2>
         <div class="motivos" id="motivosContainer"></div>
-        
-        <button
-            type="button"
-            onclick="registrarTurno()"
-            id="btnRegistrar"
-            disabled
-            class="btn-primary"
-        >
-            Obtener Turno
-        </button>
-        <button
-            type="button"
-            onclick="volverPantalla1()"
-            class="btn-secondary"
-        >
-            ← Volver
-        </button>
+        <button type="button" onclick="registrarTurno()" id="btnRegistrar" disabled class="btn-primary">Obtener Turno</button>
+        <button type="button" onclick="volverPantalla1()" class="btn-secondary">← Volver</button>
     </div>
 
     <!-- ÉXITO -->
     <div id="screenSuccess" class="screen">
-        <div class="success-icon">✅</div>
-        <h2 style="color: var(--success); margin-bottom: 10px;">
-            Turno Registrado
-        </h2>
-        <p style="color: #64748b; margin-bottom: 15px;">Tu número de turno es:</p>
-        <p id="numeroTurno"></p>
-        
-        <button
-            type="button"
-            onclick="reiniciarFormulario()"
-            class="btn-primary"
-            style="margin-top: 35px;"
-        >
-            Nuevo Registro
-        </button>
+        <div class="success-icon" style="font-size:5rem;margin-bottom:15px;">✅</div>
+        <h2 style="color:var(--success);">Turno Registrado</h2>
+        <p style="color:#64748b;">Tu número de turno es:</p>
+        <p id="numeroTurno" style="font-size:3.2rem;font-weight:700;color:var(--primary);"></p>
+        <button type="button" onclick="reiniciarFormulario()" class="btn-primary" style="margin-top:35px;">Nuevo Registro</button>
     </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
 <script>
-let datosUsuario = {};
-const motivosLista = [
-    "Inscripciones",
-    "Cursos",
-    "Alumnos",
-    "Becas",
-    "Otros trámites"
-];
+    let datosUsuario = {};
+    const motivosLista = ["Inscripciones", "Cursos", "Alumnos", "Becas", "Otros trámites"];
+    let contadores = {};
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuZW4epiGmW82rrVmAkDHLdqJ-1NzQq11DVdsk-JypimBliP5he6rrSZf5qW4fYIru0g/exec";
 
-let contadores = {};
-
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuZW4epiGmW82rrVmAkDHLdqJ-1NzQq11DVdsk-JypimBliP5he6rrSZf5qW4fYIru0g/exec";
-
-function showToast(message, duration = 2500) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.style.display = 'flex';
-    setTimeout(() => {
-        toast.style.animation = 'toastOut 0.3s ease forwards';
-        setTimeout(() => {
-            toast.style.display = 'none';
-            toast.style.animation = '';
-        }, 300);
-    }, duration);
-}
-
-function cargarMotivos() {
-    const container = document.getElementById('motivosContainer');
-    container.innerHTML = '';
-    
-    motivosLista.forEach((motivo, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'motivo-btn';
-        btn.textContent = motivo;
-        btn.style.animationDelay = `${index * 80}ms`;
-        btn.onclick = () => seleccionarMotivo(btn, motivo);
-        container.appendChild(btn);
-    });
-}
-
-function seleccionarMotivo(btn, motivo) {
-    document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    datosUsuario.motivo = motivo;
-    document.getElementById('btnRegistrar').disabled = false;
-    
-    // Pequeña vibración
-    btn.style.transform = 'scale(0.95)';
-    setTimeout(() => btn.style.transform = '', 80);
-}
-
-function generarNumeroTurno(motivo) {
-    const inicial = motivo.charAt(0).toUpperCase();
-    if (!contadores[inicial]) contadores[inicial] = 0;
-    contadores[inicial]++;
-    return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
-}
-
-function siguientePantalla() {
-    const dni = document.getElementById('dni').value.trim();
-    const celular = document.getElementById('celular').value.trim();
-    
-    if (!dni || dni.length < 7) {
-        showToast("❌ Ingresa un DNI válido");
-        return;
+    function showToast(message, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', duration);
     }
-    if (!celular || celular.length < 8) {
-        showToast("❌ Ingresa un celular válido");
-        return;
-    }
-    
-    datosUsuario = { dni, celular };
-    
-    // Transición
-    document.getElementById('screen1').classList.remove('active');
-    setTimeout(() => {
-        document.getElementById('screen2').classList.add('active');
-    }, 50);
-}
 
-async function registrarTurno() {
-    const btn = document.getElementById('btnRegistrar');
-    const originalText = btn.innerText;
-    
-    btn.classList.add('loading');
-    btn.innerText = "Guardando...";
-    btn.disabled = true;
-
-    const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
-    const fecha = new Date().toLocaleString('es-AR');
-    
-    const data = {
-        Numero_Turno: numeroTurno,
-        Fecha: fecha,
-        DNI: datosUsuario.dni,
-        Celular: datosUsuario.celular,
-        Motivo: datosUsuario.motivo
-    };
-
-    try {
-        const response = await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(data)
+    function cargarMotivos() {
+        const container = document.getElementById('motivosContainer');
+        container.innerHTML = '';
+        motivosLista.forEach(motivo => {
+            const btn = document.createElement('button');
+            btn.className = 'motivo-btn';
+            btn.textContent = motivo;
+            btn.onclick = () => seleccionarMotivo(btn, motivo);
+            container.appendChild(btn);
         });
+    }
 
-        if (!response.ok) throw new Error("Error de conexión");
+    function seleccionarMotivo(btn, motivo) {
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        datosUsuario.motivo = motivo;
+        document.getElementById('btnRegistrar').disabled = false;
+    }
 
-        const resultado = await response.json();
+    function generarNumeroTurno(motivo) {
+        const inicial = motivo.charAt(0).toUpperCase();
+        if (!contadores[inicial]) contadores[inicial] = 0;
+        contadores[inicial]++;
+        return `${inicial}-${String(contadores[inicial]).padStart(3, '0')}`;
+    }
+
+    function siguientePantalla() {
+        const dni = document.getElementById('dni').value.trim();
+        const celular = document.getElementById('celular').value.trim();
         
-        if (resultado.success) {
-            document.getElementById('numeroTurno').textContent = numeroTurno;
-            
-            document.getElementById('screen2').classList.remove('active');
-            setTimeout(() => {
-                document.getElementById('screenSuccess').classList.add('active');
-                
-                // Confetti simple
-                createConfetti();
-            }, 300);
-        } else {
-            throw new Error(resultado.error || "Error al registrar");
-        }
-    } catch (error) {
-        console.error(error);
-        showToast("❌ No se pudo registrar el turno");
-    } finally {
-        btn.classList.remove('loading');
-        btn.innerText = originalText;
-        btn.disabled = false;
-    }
-}
+        if (!dni || dni.length < 7) return showToast("❌ Ingresa un DNI válido");
+        if (!celular || celular.length < 8) return showToast("❌ Ingresa un celular válido");
 
-function createConfetti() {
-    for (let i = 0; i < 80; i++) {
-        setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.zIndex = '9999';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.top = '-10px';
-            confetti.style.width = '10px';
-            confetti.style.height = '10px';
-            confetti.style.borderRadius = '50%';
-            confetti.style.background = ['#003087', '#10b981', '#eab308', '#f97316'][Math.floor(Math.random()*4)];
-            confetti.style.opacity = Math.random() + 0.6;
-            confetti.style.transform = `rotate(${Math.random()*360}deg)`;
-            document.body.appendChild(confetti);
-            
-            const duration = Math.random() * 3 + 2;
-            confetti.animate([
-                { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
-                { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*800 - 400}deg)`, opacity: 0 }
-            ], {
-                duration: duration * 1000,
-                easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+        datosUsuario = { dni, celular };
+        document.getElementById('screen1').classList.remove('active');
+        setTimeout(() => document.getElementById('screen2').classList.add('active'), 100);
+    }
+
+    async function registrarTurno() {
+        const btn = document.getElementById('btnRegistrar');
+        btn.disabled = true;
+        btn.innerText = "Guardando...";
+
+        const numeroTurno = generarNumeroTurno(datosUsuario.motivo);
+        const data = {
+            Numero_Turno: numeroTurno,
+            Fecha: new Date().toLocaleString('es-AR'),
+            DNI: datosUsuario.dni,
+            Celular: datosUsuario.celular,
+            Motivo: datosUsuario.motivo
+        };
+
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(data)
             });
+            const resultado = await response.json();
             
-            setTimeout(() => confetti.remove(), duration * 1000 + 100);
-        }, i * 6);
-    }
-}
-
-function mostrarLoginAdmin() {
-    window.open("https://docs.google.com/spreadsheets/d/1CGsivhXMu9JAwl4aR0MlYMnnlH20xEaBQK_ZyQHrt0A/edit", "_blank");
-}
-
-function reiniciarFormulario() {
-    document.getElementById('screenSuccess').classList.remove('active');
-    document.getElementById('screen1').classList.add('active');
-    
-    document.getElementById('dni').value = '';
-    document.getElementById('celular').value = '';
-    
-    document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btnRegistrar').disabled = true;
-}
-
-function volverPantalla1() {
-    document.getElementById('screen2').classList.remove('active');
-    setTimeout(() => {
-        document.getElementById('screen1').classList.add('active');
-    }, 200);
-}
-
-// Keyboard support
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        const activeScreen = document.querySelector('.screen.active');
-        if (activeScreen.id === 'screen1') {
-            siguientePantalla();
+            if (resultado.success) {
+                document.getElementById('numeroTurno').textContent = numeroTurno;
+                document.getElementById('screen2').classList.remove('active');
+                document.getElementById('screenSuccess').classList.add('active');
+            } else {
+                showToast("Error al registrar");
+            }
+        } catch (error) {
+            showToast("❌ No se pudo registrar el turno");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Obtener Turno";
         }
     }
-});
 
-window.onload = cargarMotivos;
+    function mostrarLoginAdmin() {
+        window.open("https://docs.google.com/spreadsheets/d/1CGsivhXMu9JAwl4aR0MlYMnnlH20xEaBQK_ZyQHrt0A/edit", "_blank");
+    }
+
+    function reiniciarFormulario() {
+        document.getElementById('screenSuccess').classList.remove('active');
+        document.getElementById('screen1').classList.add('active');
+        document.getElementById('dni').value = '';
+        document.getElementById('celular').value = '';
+        document.querySelectorAll('.motivo-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btnRegistrar').disabled = true;
+    }
+
+    function volverPantalla1() {
+        document.getElementById('screen2').classList.remove('active');
+        setTimeout(() => document.getElementById('screen1').classList.add('active'), 200);
+    }
+
+    window.onload = cargarMotivos;
 </script>
 </body>
 </html>
